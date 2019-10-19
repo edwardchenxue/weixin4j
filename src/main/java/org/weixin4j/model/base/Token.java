@@ -176,6 +176,14 @@ public final class Token implements Serializable {
         return this.create_time + 60000;
     }
 
+    public long getExprexpired_time() {
+        return exprexpired_time;
+    }
+
+    public void setExprexpired_time(long exprexpired_time) {
+        this.exprexpired_time = exprexpired_time;
+    }
+
     /**
      * 将数据转换为JSON数据包
      *

@@ -38,6 +38,9 @@ import org.weixin4j.model.base.Token;
  */
 public class BaseComponent extends AbstractComponent {
 
+    public BaseComponent() {
+    }
+
     public BaseComponent(Weixin weixin) {
         super(weixin);
     }
@@ -45,18 +48,20 @@ public class BaseComponent extends AbstractComponent {
     /**
      * 获取access_token（每次都获取新的，请缓存下来，2小时过期）
      *
+     * @param appId
+     * @param secret
      * @return 获取的AccessToken对象
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
-    public Token token() throws WeixinException {
-        if (StringUtils.isEmpty(weixin.getAppId())) {
+    public Token token(String appId, String secret) throws WeixinException {
+        if (StringUtils.isEmpty(appId)) {
             throw new IllegalArgumentException("appid can't be null or empty");
         }
-        if (StringUtils.isEmpty(weixin.getSecret())) {
+        if (StringUtils.isEmpty(secret)) {
             throw new IllegalArgumentException("secret can't be null or empty");
         }
         //拼接参数
-        String param = "?grant_type=client_credential&appid=" + weixin.getAppId() + "&secret=" + weixin.getSecret();
+        String param = "?grant_type=client_credential&appid=" + appId + "&secret=" + secret;
         //创建请求对象
         HttpsClient http = new HttpsClient();
         //调用获取access_token接口
@@ -75,7 +80,19 @@ public class BaseComponent extends AbstractComponent {
             throw new WeixinException(getCause(jsonObj.getIntValue("errcode")));
         }
         //设置凭证，设置accessToken和过期时间
-        return (Token) JSONObject.toJavaObject(jsonObj, Token.class);
+        return JSONObject.toJavaObject(jsonObj, Token.class);
+    }
+
+
+
+    /**
+     * 获取access_token（每次都获取新的，请缓存下来，2小时过期）
+     *
+     * @return 获取的AccessToken对象
+     * @throws org.weixin4j.WeixinException 微信操作异常
+     */
+    public Token token() throws WeixinException {
+        return token(weixin.getAppId(), weixin.getSecret());
     }
 
     /**

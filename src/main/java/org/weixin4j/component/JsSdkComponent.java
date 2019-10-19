@@ -2,7 +2,7 @@
  * 微信公众平台(JAVA) SDK
  *
  * Copyright (c) 2014, Ansitech Network Technology Co.,Ltd All rights reserved.
- * 
+ *
  * http://www.weixin4j.org/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,11 +33,14 @@ import org.weixin4j.util.SignUtil;
 
 /**
  * Js接口组件
- * 
+ *
  * @author yangqisheng
  * @since 0.1.0
  */
 public class JsSdkComponent extends AbstractComponent {
+
+    public JsSdkComponent() {
+    }
 
     public JsSdkComponent(Weixin weixin) {
         super(weixin);
@@ -50,10 +53,21 @@ public class JsSdkComponent extends AbstractComponent {
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
     public Ticket getJsApiTicket() throws WeixinException {
+        return getJsApiTicket(weixin.getToken().getAccess_token());
+    }
+
+    /**
+     * 根据accessToken获取Ticket
+     *
+     * @param accessToken accessToken
+     * @return 成功返回jsapi_ticket对象，失败返回NULL
+     * @throws org.weixin4j.WeixinException 微信操作异常
+     */
+    public Ticket getJsApiTicket(String accessToken) throws WeixinException {
         //创建请求对象
         HttpsClient http = new HttpsClient();
         //调用获取jsapi_ticket接口
-        Response res = http.get("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + weixin.getToken().getAccess_token() + "&type=jsapi");
+        Response res = http.get("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + accessToken + "&type=jsapi");
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         //成功返回如下JSON:
@@ -73,6 +87,7 @@ public class JsSdkComponent extends AbstractComponent {
         return null;
     }
 
+
     /**
      * 获取微信Js接口配置
      *
@@ -88,9 +103,9 @@ public class JsSdkComponent extends AbstractComponent {
     /**
      * 获取微信Js接口配置
      *
-     * @param noncestr 随机字符串
+     * @param noncestr  随机字符串
      * @param timestamp 时间戳
-     * @param url 当前网页的URL(包含?及参数，不包含#及其后面部分)
+     * @param url       当前网页的URL(包含?及参数，不包含#及其后面部分)
      * @return 微信接口配置对象
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
@@ -102,7 +117,7 @@ public class JsSdkComponent extends AbstractComponent {
      * 获取微信Js接口配置
      *
      * @param jsapi_ticket 微信JS接口的临时票据
-     * @param url 当前网页的URL(包含?及参数，不包含#及其后面部分)
+     * @param url          当前网页的URL(包含?及参数，不包含#及其后面部分)
      * @return 微信接口配置对象
      */
     public WxConfig getWxConfig(String jsapi_ticket, String url) {
@@ -114,9 +129,9 @@ public class JsSdkComponent extends AbstractComponent {
      * 获取微信Js接口配置
      *
      * @param jsapi_ticket 微信JS接口的临时票据
-     * @param noncestr 随机字符串
-     * @param timestamp 时间戳
-     * @param url 当前网页的URL(包含?及参数，不包含#及其后面部分)
+     * @param noncestr     随机字符串
+     * @param timestamp    时间戳
+     * @param url          当前网页的URL(包含?及参数，不包含#及其后面部分)
      * @return 微信接口配置对象
      */
     public WxConfig getWxConfig(String jsapi_ticket, String noncestr, long timestamp, String url) {

@@ -32,10 +32,16 @@ public abstract class AbstractComponent extends WeixinSupport{
 
     protected Weixin weixin;
 
+
+    public AbstractComponent() {
+    }
+
     public AbstractComponent(Weixin weixin) {
         if (weixin == null) {
             throw new IllegalArgumentException("weixin can not be null");
         }
         this.weixin = weixin;
     }
+
+
 }

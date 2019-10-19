@@ -44,6 +44,19 @@ public class SnsComponent extends AbstractComponent {
      */
     private String authorize_url = "https://open.weixin.qq.com/connect/oauth2/authorize";
 
+    public static String getAccessTokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token";
+
+    public static String getUserInfo = "https://api.weixin.qq.com/sns/userinfo";
+
+
+
+    /**
+     * 网页授权基础支持
+     *
+     */
+    public SnsComponent() {
+    }
+
     /**
      * 网页授权基础支持
      *
@@ -113,6 +126,40 @@ public class SnsComponent extends AbstractComponent {
     public String getOpenId(String code) throws WeixinException {
         SnsAccessToken snsAccessToken = getSnsOAuth2AccessToken(code);
         return snsAccessToken.getOpenid();
+    }
+
+    /**
+     * 获取网页授权AccessToken
+     *
+     * @param code 换取身份唯一凭证
+     * @return 网页授权AccessToken
+     * @throws org.weixin4j.WeixinException 微信操作异常
+     * @since 0.1.0
+     */
+    public SnsAccessToken getSnsOAuth2AccessToken(String appId, String secret, String code) throws WeixinException {
+        if (StringUtils.isEmpty(code)) {
+            throw new IllegalArgumentException("code can't be null or empty");
+        }
+        //拼接参数
+        String param = "?appid=" + appId + "&secret=" + secret + "&code=" + code + "&grant_type=authorization_code";
+        //创建请求对象
+        HttpsClient http = new HttpsClient();
+        //调用获取access_token接口
+        Response res = http.get(getAccessTokenUrl + param);
+        //根据请求结果判定，是否验证成功
+        JSONObject jsonObj = res.asJSONObject();
+        if (jsonObj == null) {
+            return null;
+        }
+        if (Configuration.isDebug()) {
+            System.out.println("getSnsOAuth2AccessToken返回json：" + jsonObj.toString());
+        }
+        Object errcode = jsonObj.get("errcode");
+        if (errcode != null) {
+            //返回异常信息
+            throw new WeixinException(getCause(jsonObj.getIntValue("errcode")));
+        }
+        return new SnsAccessToken(jsonObj);
     }
 
     /**
@@ -262,7 +309,7 @@ public class SnsComponent extends AbstractComponent {
      * @return 用户对象
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
-    private SnsUser getSnsUser(String access_token, String openid, String lang) throws WeixinException {
+    public SnsUser getSnsUser(String access_token, String openid, String lang) throws WeixinException {
         if (StringUtils.isEmpty(access_token)) {
             throw new IllegalArgumentException("access_token can't be null or empty");
         }
@@ -278,7 +325,7 @@ public class SnsComponent extends AbstractComponent {
         //创建请求对象
         HttpsClient http = new HttpsClient();
         //调用获取access_token接口
-        Response res = http.get("https://api.weixin.qq.com/sns/userinfo" + param);
+        Response res = http.get(getUserInfo + param);
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
