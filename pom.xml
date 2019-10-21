@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.weixin4j</groupId>
     <artifactId>weixin4j</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.5.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,15 +41,19 @@
             <version>2.6</version>
         </dependency>
     </dependencies>
+    <!-- 项目发布管理 -->
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>nexus-releases</id>
+            <name>User Project Release</name>
+            <url>http://repo.dadingsoft.com/nexus/content/repositories/releases/</url>
         </repository>
+
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>User Project SNAPSHOTS</name>
+            <url>http://repo.dadingsoft.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
     <profiles>
         <profile>

@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -88,7 +89,7 @@ public class HttpsClient implements java.io.Serializable {
             System.out.println("URL POST 数据：" + jsonString);
         }
         //提交数据
-        return httpsRequest(url, POST, jsonString, false, null, null, null);
+        return httpRequest(url, POST, jsonString, false, null, null, null);
     }
 
     /**
@@ -101,7 +102,7 @@ public class HttpsClient implements java.io.Serializable {
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
     public Response get(String url) throws WeixinException {
-        return httpsRequest(url, GET, null, false, null, null, null);
+        return httpRequest(url, GET, null, false, null, null, null);
     }
 
     /**
@@ -113,7 +114,7 @@ public class HttpsClient implements java.io.Serializable {
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
     public Response postXml(String url, String xml) throws WeixinException {
-        return httpsRequest(url, POST, xml, false, null, null, null);
+        return httpRequest(url, POST, xml, false, null, null, null);
     }
 
     /**
@@ -128,11 +129,13 @@ public class HttpsClient implements java.io.Serializable {
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
     public Response postXml(String url, String xml, String partnerId, String certPath, String certSecret) throws WeixinException {
-        return httpsRequest(url, POST, xml, true, partnerId, certPath, certSecret);
+        return httpRequest(url, POST, xml, true, partnerId, certPath, certSecret);
     }
 
     /**
-     * 通过https协议请求url
+     * 通过http协议请求url
+     *
+     * 实现方法中会根据url判断地址是https还是http
      *
      * @param url 提交地址
      * @param method 提交方式
@@ -140,41 +143,41 @@ public class HttpsClient implements java.io.Serializable {
      * @return 响应流
      * @throws org.weixin4j.WeixinException 微信操作异常
      */
-    private Response httpsRequest(String url, String method, String postData, boolean needCert, String partnerId, String certPath, String certSecret)
+    private Response httpRequest(String url, String method, String postData, boolean needCert, String partnerId, String certPath, String certSecret)
             throws WeixinException {
-        Response res = null;
+        Response res;
         OutputStream output;
-        HttpsURLConnection https;
+        HttpURLConnection httpURLConnection;
         try {
-            //创建https请求连接
-            https = getHttpsURLConnection(url);
-            //判断https是否为空，如果为空返回null响应
-            if (https != null) {
+            //判断schema
+            if(url.startsWith("https:")) {
+                //创建https请求连接
+                httpURLConnection = getHttpsURLConnection(url);
                 //设置Header信息，包括https证书
-                setHttpsHeader(https, method, needCert, partnerId, certPath, certSecret);
-                //判断是否需要提交数据
-                if (method.equals(POST) && null != postData) {
-                    //讲参数转换为字节提交
-                    byte[] bytes = postData.getBytes(DEFAULT_CHARSET);
-                    //设置头信息
-                    https.setRequestProperty("Content-Length", Integer.toString(bytes.length));
-                    //开始连接
-                    https.connect();
-                    //获取返回信息
-                    output = https.getOutputStream();
-                    output.write(bytes);
-                    output.flush();
-                    output.close();
-                } else {
-                    //开始连接
-                    https.connect();
-                }
-                //创建输出对象
-                res = new Response(https);
-                //获取响应代码
-                if (res.getStatus() == OK) {
-                    return res;
-                }
+                setHttpsHeader((HttpsURLConnection) httpURLConnection, needCert, partnerId, certPath, certSecret);
+            } else {
+                //创建http请求连接
+                httpURLConnection = getHttpURLConnection(url);
+            }
+            setHttpHeader(httpURLConnection, method);
+            //判断是否需要提交数据
+            if (method.equals(POST) && null != postData) {
+                byte[] bytes = postData.getBytes(DEFAULT_CHARSET);
+                httpURLConnection.setRequestProperty("Content-Length", Integer.toString(bytes.length));
+                httpURLConnection.connect();
+                output = httpURLConnection.getOutputStream();
+                output.write(bytes);
+                output.flush();
+                output.close();
+            } else {
+                //开始连接
+                httpURLConnection.connect();
+            }
+            //创建输出对象
+            res = new Response(httpURLConnection);
+            //获取响应代码
+            if (res.getStatus() == OK) {
+                return res;
             }
         } catch (NoSuchAlgorithmException ex) {
             throw new WeixinException(ex.getMessage(), ex);
@@ -208,7 +211,21 @@ public class HttpsClient implements java.io.Serializable {
         return httpsUrlConnection;
     }
 
-    private void setHttpsHeader(HttpsURLConnection httpsUrlConnection, String method, boolean needCert, String partnerId, String certPath, String certSecret)
+    /**
+     * 获取http请求连接
+     *
+     * @param url 连接地址
+     * @return http连接对象
+     * @throws IOException IO异常
+     */
+    private HttpURLConnection getHttpURLConnection(String url) throws IOException {
+        URL urlGet = new URL(url);
+        //创建https请求
+        HttpURLConnection httpURLConnection = (HttpURLConnection) urlGet.openConnection();
+        return httpURLConnection;
+    }
+
+    private void setHttpsHeader(HttpsURLConnection httpsUrlConnection, boolean needCert, String partnerId, String certPath, String certSecret)
             throws NoSuchAlgorithmException, KeyManagementException, NoSuchProviderException,
             IOException, KeyStoreException, CertificateException, UnrecoverableKeyException {
         //不需要维修证书，则使用默认证书
@@ -245,32 +262,36 @@ public class HttpsClient implements java.io.Serializable {
             //设置ssl证书
             httpsUrlConnection.setSSLSocketFactory(ssf);
         }
+    }
+
+
+    private void setHttpHeader(HttpURLConnection httpURLConnection, String method) throws IOException {
         //设置header信息
-        httpsUrlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         //设置User-Agent信息
-        httpsUrlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.146 Safari/537.36");
+        httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.146 Safari/537.36");
         //设置可接受信息
-        httpsUrlConnection.setDoOutput(true);
+        httpURLConnection.setDoOutput(true);
         //设置可输入信息
-        httpsUrlConnection.setDoInput(true);
+        httpURLConnection.setDoInput(true);
         //设置请求方式
-        httpsUrlConnection.setRequestMethod(method);
+        httpURLConnection.setRequestMethod(method);
         //设置连接超时时间
         if (CONNECTION_TIMEOUT > 0) {
-            httpsUrlConnection.setConnectTimeout(CONNECTION_TIMEOUT);
+            httpURLConnection.setConnectTimeout(CONNECTION_TIMEOUT);
         } else {
             //默认10秒超时
-            httpsUrlConnection.setConnectTimeout(10000);
+            httpURLConnection.setConnectTimeout(10000);
         }
         //设置请求超时
         if (READ_TIMEOUT > 0) {
-            httpsUrlConnection.setReadTimeout(READ_TIMEOUT);
+            httpURLConnection.setReadTimeout(READ_TIMEOUT);
         } else {
             //默认10秒超时
-            httpsUrlConnection.setReadTimeout(10000);
+            httpURLConnection.setReadTimeout(10000);
         }
         //设置编码
-        httpsUrlConnection.setRequestProperty("Charsert", "UTF-8");
+        httpURLConnection.setRequestProperty("Charsert", "UTF-8");
     }
 
     /**
@@ -290,7 +311,8 @@ public class HttpsClient implements java.io.Serializable {
             //创建https请求连接
             https = getHttpsURLConnection(url);
             //设置header和ssl证书
-            setHttpsHeader(https, POST, false, null, null, null);
+            setHttpsHeader(https, false, null, null, null);
+            setHttpHeader(https, POST);
             //不缓存
             https.setUseCaches(false);
             //保持连接
@@ -383,7 +405,8 @@ public class HttpsClient implements java.io.Serializable {
             //创建https请求连接
             https = getHttpsURLConnection(url);
             //设置header和ssl证书
-            setHttpsHeader(https, POST, false, null, null, null);
+            setHttpsHeader(https, false, null, null, null);
+            setHttpHeader(https,POST);
             //不缓存
             https.setUseCaches(false);
             //保持连接
