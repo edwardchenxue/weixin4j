@@ -23,6 +23,8 @@ import java.io.StringReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
 import org.weixin4j.WeixinException;
@@ -41,6 +43,7 @@ import org.weixin4j.model.pay.UnifiedOrderSLResult;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class PayComponent extends AbstractComponent {
 
     public PayComponent(Weixin weixin) {
@@ -57,8 +60,8 @@ public class PayComponent extends AbstractComponent {
     public UnifiedOrderResult payUnifiedOrder(UnifiedOrder unifiedorder) throws WeixinException {
         //将统一下单对象转成XML
         String xmlPost = unifiedorder.toXML();
-        if (Configuration.isDebug()) {
-            System.out.println("调试模式_统一下单接口 提交XML数据：" + xmlPost);
+        if (log.isDebugEnabled()) {
+            log.debug("调试模式_统一下单接口 提交XML数据：" + xmlPost);
         }
         //创建请求对象
         HttpsClient http = new HttpsClient();
@@ -86,8 +89,8 @@ public class PayComponent extends AbstractComponent {
     public UnifiedOrderSLResult payUnifiedOrderSL(UnifiedOrderSL unifiedOrderSL) throws WeixinException {
         //将统一下单对象转成XML
         String xmlPost = unifiedOrderSL.toXML();
-        if (Configuration.isDebug()) {
-            System.out.println("调试模式_服务商统一下单接口 提交XML数据：" + xmlPost);
+        if (log.isDebugEnabled()) {
+            log.debug("调试模式_服务商统一下单接口 提交XML数据：" + xmlPost);
         }
         //创建请求对象
         HttpsClient http = new HttpsClient();
@@ -115,8 +118,8 @@ public class PayComponent extends AbstractComponent {
     public OrderQueryResult payOrderQuery(OrderQuery orderQuery) throws WeixinException {
         //将统一下单对象转成XML
         String xmlPost = orderQuery.toXML();
-        if (Configuration.isDebug()) {
-            System.out.println("调试模式_查询订单接口 提交XML数据：" + xmlPost);
+        if (log.isDebugEnabled()) {
+            log.debug("调试模式_查询订单接口 提交XML数据：" + xmlPost);
         }
         //创建请求对象
         HttpsClient http = new HttpsClient();
@@ -125,8 +128,8 @@ public class PayComponent extends AbstractComponent {
         //获取微信平台查询订单接口返回数据
         String xmlResult = res.asString();
         try {
-            if (Configuration.isDebug()) {
-                System.out.println("调试模式_查询订单接口 接收XML数据：" + xmlResult);
+            if (log.isDebugEnabled()) {
+                log.debug("调试模式_查询订单接口 接收XML数据：" + xmlResult);
             }
             JAXBContext context = JAXBContext.newInstance(OrderQueryResult.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();

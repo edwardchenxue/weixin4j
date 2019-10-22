@@ -23,6 +23,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
 import org.weixin4j.WeixinException;
@@ -36,6 +38,7 @@ import org.weixin4j.model.tags.Tag;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class TagsComponent extends AbstractComponent {
 
     public TagsComponent(Weixin weixin) {
@@ -67,8 +70,8 @@ public class TagsComponent extends AbstractComponent {
         //成功返回如下JSON:
         //{"tag":{"id":134, name":"广东"}}
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("获取/tags/create返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("获取/tags/create返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -101,8 +104,8 @@ public class TagsComponent extends AbstractComponent {
         //成功返回如下JSON:
         //{"tags":[{"id":1,"name":"黑名单","count":0},{"id":2,"name":"星标组","count":0},{"id":127,"name":"广东","count":5}]}
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("获取/tags/get返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("获取/tags/get返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -150,8 +153,8 @@ public class TagsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/tags/update返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/tags/update返回json:" + jsonObj.toString());
             }
             //判断是否修改成功
             //正常时返回 {"errcode": 0, "errmsg": "ok"}
@@ -184,8 +187,8 @@ public class TagsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/tags/delete返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/tags/delete返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -212,8 +215,8 @@ public class TagsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/tags/members/batchtagging返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/tags/members/batchtagging返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -240,8 +243,8 @@ public class TagsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/tags/members/batchuntagging返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/tags/members/batchuntagging返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -268,8 +271,8 @@ public class TagsComponent extends AbstractComponent {
         //成功返回如下JSON:
         //{"tagid_list":[134,2]}
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("获取/tags/getidlist返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("获取/tags/getidlist返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -318,8 +321,8 @@ public class TagsComponent extends AbstractComponent {
         //  "next_openid":"OPENID10000"
         //}
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("获取/tags/members/getblacklist返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("获取/tags/members/getblacklist返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -357,8 +360,8 @@ public class TagsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/tags/members/batchblacklist返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/tags/members/batchblacklist返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -384,8 +387,8 @@ public class TagsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/tags/members/batchunblacklist返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/tags/members/batchunblacklist返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

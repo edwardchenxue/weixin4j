@@ -20,6 +20,7 @@
 package org.weixin4j.component;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.model.sns.SnsAccessToken;
 import org.weixin4j.http.Response;
 import java.io.UnsupportedEncodingException;
@@ -37,6 +38,7 @@ import org.weixin4j.http.HttpsClient;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class SnsComponent extends AbstractComponent {
 
     /**
@@ -151,8 +153,8 @@ public class SnsComponent extends AbstractComponent {
         if (jsonObj == null) {
             return null;
         }
-        if (Configuration.isDebug()) {
-            System.out.println("getSnsOAuth2AccessToken返回json：" + jsonObj.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("getSnsOAuth2AccessToken返回json:{}",jsonObj.toString());
         }
         Object errcode = jsonObj.get("errcode");
         if (errcode != null) {
@@ -185,8 +187,8 @@ public class SnsComponent extends AbstractComponent {
         if (jsonObj == null) {
             return null;
         }
-        if (Configuration.isDebug()) {
-            System.out.println("getSnsOAuth2AccessToken返回json：" + jsonObj.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("getSnsOAuth2AccessToken返回json:" + jsonObj.toString());
         }
         Object errcode = jsonObj.get("errcode");
         if (errcode != null) {
@@ -221,8 +223,8 @@ public class SnsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("validateAccessToken返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("validateAccessToken返回json:" + jsonObj.toString());
             }
             return jsonObj.getIntValue("errcode") == 0;
         }
@@ -250,8 +252,8 @@ public class SnsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("refreshToken返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("refreshToken返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null) {
@@ -329,8 +331,8 @@ public class SnsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("getSnsUser返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("getSnsUser返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null) {

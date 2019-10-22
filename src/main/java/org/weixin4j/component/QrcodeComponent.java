@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.http.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,6 +46,7 @@ import org.weixin4j.model.qrcode.QrcodeType;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class QrcodeComponent extends AbstractComponent {
 
     public QrcodeComponent(Weixin weixin) {
@@ -144,8 +147,8 @@ public class QrcodeComponent extends AbstractComponent {
         //根据请求结果判定，返回结果
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/qrcode/create返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/qrcode/create返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

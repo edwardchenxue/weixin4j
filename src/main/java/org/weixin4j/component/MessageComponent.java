@@ -21,6 +21,8 @@ package org.weixin4j.component;
 
 import com.alibaba.fastjson.JSONObject;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
 import org.weixin4j.WeixinException;
@@ -37,6 +39,7 @@ import org.weixin4j.model.message.template.TemplateMessage;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class MessageComponent extends AbstractComponent {
 
     public MessageComponent(Weixin weixin) {
@@ -64,8 +67,8 @@ public class MessageComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("群发文本消息返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("群发文本消息返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -100,8 +103,8 @@ public class MessageComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/message/mass/send返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/message/mass/send返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -135,8 +138,8 @@ public class MessageComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("customSendContent返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("customSendContent返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -166,8 +169,8 @@ public class MessageComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("customSendNews返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("customSendNews返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -268,8 +271,8 @@ public class MessageComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("sendTemplateMessage返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("sendTemplateMessage返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

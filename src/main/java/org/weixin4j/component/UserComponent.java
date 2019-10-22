@@ -23,6 +23,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.weixin4j.Configuration;
 import org.weixin4j.model.user.Data;
@@ -39,6 +41,7 @@ import org.weixin4j.model.user.User;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class UserComponent extends AbstractComponent {
 
     public UserComponent(Weixin weixin) {
@@ -73,8 +76,8 @@ public class UserComponent extends AbstractComponent {
         if (jsonObj == null) {
             throw new WeixinException(getCause(-1));
         }
-        if (Configuration.isDebug()) {
-            System.out.println("updateremark返回json：" + jsonObj.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("updateremark返回json:" + jsonObj.toString());
         }
         //判断是否修改成功
         //正常时返回 {"errcode": 0, "errmsg": "ok"}
@@ -125,8 +128,8 @@ public class UserComponent extends AbstractComponent {
         if (jsonObj == null) {
             return null;
         }
-        if (Configuration.isDebug()) {
-            System.out.println("getUser返回json：" + jsonObj.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("getUser返回json:" + jsonObj.toString());
         }
         Object errcode = jsonObj.get("errcode");
         if (errcode != null) {
@@ -208,8 +211,8 @@ public class UserComponent extends AbstractComponent {
         if (jsonObj == null) {
             return null;
         }
-        if (Configuration.isDebug()) {
-            System.out.println("batchGetUser返回json：" + jsonObj.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("batchGetUser返回json:" + jsonObj.toString());
         }
         Object errcode = jsonObj.get("errcode");
         if (errcode != null) {
@@ -285,8 +288,8 @@ public class UserComponent extends AbstractComponent {
         if (jsonObj == null) {
             return null;
         }
-        if (Configuration.isDebug()) {
-            System.out.println("getUserList返回json：" + jsonObj.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("getUserList返回json:" + jsonObj.toString());
         }
         Object errcode = jsonObj.get("errcode");
         if (errcode != null) {
@@ -358,8 +361,8 @@ public class UserComponent extends AbstractComponent {
         JSONObject jsonObj = res.asJSONObject();
         Followers follower = null;
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("getTagUserList返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("getTagUserList返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null) {

@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
 import org.weixin4j.WeixinException;
@@ -38,6 +40,7 @@ import org.weixin4j.http.HttpClient;
  * @since 0.1.0
  */
 @Deprecated
+@Slf4j
 public class FileComponent extends AbstractComponent {
 
     public FileComponent(Weixin weixin) {
@@ -61,8 +64,8 @@ public class FileComponent extends AbstractComponent {
             String jsonStr = http.upload("http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=" + weixin.getToken().getAccess_token() + "&type=" + mediaType, file);
             JSONObject jsonObj = JSONObject.parseObject(jsonStr);
             if (jsonObj != null) {
-                if (Configuration.isDebug()) {
-                    System.out.println("上传多媒体文件返回json：" + jsonObj.toString());
+                if (log.isDebugEnabled()) {
+                    log.debug("上传多媒体文件返回json:" + jsonObj.toString());
                 }
                 Object errcode = jsonObj.get("errcode");
                 if (errcode != null && !errcode.toString().equals("0")) {

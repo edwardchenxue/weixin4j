@@ -23,6 +23,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
 import org.weixin4j.WeixinException;
@@ -36,6 +38,7 @@ import org.weixin4j.model.groups.Group;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class GroupsComponent extends AbstractComponent {
 
     public GroupsComponent(Weixin weixin) {
@@ -67,8 +70,8 @@ public class GroupsComponent extends AbstractComponent {
         JSONObject jsonObj = res.asJSONObject();
         Group group = null;
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/groups/create返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/groups/create返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null) {
@@ -99,8 +102,8 @@ public class GroupsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("getGroups返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("getGroups返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null) {
@@ -144,8 +147,8 @@ public class GroupsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("getGroupId返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("getGroupId返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null) {
@@ -186,8 +189,8 @@ public class GroupsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/groups/update返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/groups/update返回json:" + jsonObj.toString());
             }
             //判断是否修改成功
             //正常时返回 {"errcode": 0, "errmsg": "ok"}
@@ -220,8 +223,8 @@ public class GroupsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/groups/delete返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/groups/delete返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -257,8 +260,8 @@ public class GroupsComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/groups/members/update返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/groups/members/update返回json:" + jsonObj.toString());
             }
             //判断是否修改成功
             //正常时返回 {"errcode": 0, "errmsg": "ok"}

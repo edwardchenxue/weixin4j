@@ -38,11 +38,11 @@ public class Demo {
         //但是优先以系统设置的属性为准，例如：
         System.setProperty("weixin4j.debug", "false");
         //打印调试开关，如果打开调试开关，则会向控制台打印方法调用执行日志
-        System.out.println(Configuration.isDebug());
+        log.debug(log.isDebugEnabled());
         //1.初始化weixin对象
         Weixin weixin = new Weixin();
         //2.打印开发者appid
-        System.out.println(weixin.getAppId());
+        log.debug(weixin.getAppId());
         //3.下面为大家演示利用菜单组件来创建公众号自定义菜单
         //组件命名以微信的接口api请求为名
         //例如自定义菜单接口请求地址
@@ -150,7 +150,7 @@ public class Demo {
 
         //设置自定义菜单
         menu.setButton(buttons);
-        System.out.println(menu.toJSONObject().toJSONString());
+        log.debug(menu.toJSONObject().toJSONString());
         //try {
         //
         //    //调用微信自定义菜单组件，创建自定义菜单

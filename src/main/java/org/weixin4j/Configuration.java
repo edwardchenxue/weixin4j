@@ -19,6 +19,8 @@
  */
 package org.weixin4j;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,6 +37,7 @@ import java.util.Properties;
  * @author yangqisheng
  * @since 0.0.1
  */
+@Slf4j
 public class Configuration {
 
     private static Properties defaultProperty;
@@ -57,7 +60,7 @@ public class Configuration {
                 || loadProperties(defaultProperty, Configuration.class.getResourceAsStream("/WEB-INF/" + t4jProps))
                 || loadProperties(defaultProperty, Configuration.class.getClassLoader().getResourceAsStream(t4jProps));
         if (!loaded) {
-            System.out.println("weixin4j:没有加载到weixin4j.properties属性文件!");
+            log.debug("weixin4j:没有加载到weixin4j.properties属性文件!");
         }
     }
 

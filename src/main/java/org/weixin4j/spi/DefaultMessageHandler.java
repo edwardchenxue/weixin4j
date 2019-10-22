@@ -19,6 +19,7 @@
  */
 package org.weixin4j.spi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.model.message.InputMessage;
 import java.io.IOException;
 import java.io.StringReader;
@@ -39,6 +40,7 @@ import org.weixin4j.util.XStreamFactory;
  * @author yangqisheng
  * @since 0.0.1
  */
+@Slf4j
 public class DefaultMessageHandler implements IMessageHandler {
 
     private final IEventMessageHandler eventMsgHandler;
@@ -68,10 +70,10 @@ public class DefaultMessageHandler implements IMessageHandler {
         try {
             //将输入流转换为字符串
             String xmlMsg = XStreamFactory.inputStream2String(inputStream);
-            if (Configuration.isDebug()) {
-                System.out.println("获取POST的消息:");
-                System.out.println(xmlMsg);
-                System.out.println("------------------------");
+            if (log.isDebugEnabled()) {
+                log.debug("获取POST的消息:");
+                log.debug(xmlMsg);
+                log.debug("------------------------");
             }
             return this.invoke(xmlMsg);
         } catch (IOException ex) {
@@ -87,13 +89,13 @@ public class DefaultMessageHandler implements IMessageHandler {
             JAXBContext context = JAXBContext.newInstance(InputMessage.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             InputMessage inputMsg = (InputMessage) unmarshaller.unmarshal(new StringReader(inputXml));
-            if (Configuration.isDebug()) {
-                System.out.println("将指定节点下的xml节点数据转换为对象成功!");
+            if (log.isDebugEnabled()) {
+                log.debug("将指定节点下的xml节点数据转换为对象成功!");
             }
             // 取得消息类型
             String msgType = inputMsg.getMsgType();
-            if (Configuration.isDebug()) {
-                System.out.println("POST的消息类型:[" + msgType + "]");
+            if (log.isDebugEnabled()) {
+                log.debug("POST的消息类型:[" + msgType + "]");
             }
             if (msgType.equals(MsgType.Text.toString())) {
                 //处理文本消息
@@ -182,10 +184,10 @@ public class DefaultMessageHandler implements IMessageHandler {
             try {
                 // 把发送发送对象转换为xml输出
                 String xml = outputMsg.toXML();
-                if (Configuration.isDebug()) {
-                    System.out.println("POST输出消息:");
-                    System.out.println(xml);
-                    System.out.println("------------------------");
+                if (log.isDebugEnabled()) {
+                    log.debug("POST输出消息:");
+                    log.debug(xml);
+                    log.debug("------------------------");
                 }
                 return xml;
             } catch (Exception ex) {

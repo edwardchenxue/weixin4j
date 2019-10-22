@@ -19,6 +19,7 @@
  */
 package org.weixin4j;
 
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.util.TokenUtil;
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -39,12 +40,13 @@ import org.weixin4j.spi.HandlerFactory;
  * @author yangqisheng
  * @since 0.0.1
  */
+@Slf4j
 public class WeixinUrlFilter implements Filter {
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        if (Configuration.isDebug()) {
-            System.out.println("WeixinUrlFilter启动成功!");
+        if (log.isDebugEnabled()) {
+            log.debug("WeixinUrlFilter启动成功!");
         }
     }
 
@@ -54,9 +56,9 @@ public class WeixinUrlFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         //微信服务器将发送GET请求到填写的URL上,这里需要判定是否为GET请求
         boolean isGet = request.getMethod().toLowerCase().equals("get");
-        if (Configuration.isDebug()) {
-            System.out.println("获得微信请求:" + request.getMethod() + " 方式");
-            System.out.println("微信请求URL:" + request.getServletPath());
+        if (log.isDebugEnabled()) {
+            log.debug("获得微信请求:" + request.getMethod() + " 方式");
+            log.debug("微信请求URL:" + request.getServletPath());
         }
         //消息来源可靠性验证
         String signature = request.getParameter("signature");// 微信加密签名
@@ -95,8 +97,8 @@ public class WeixinUrlFilter implements Filter {
             response.setContentType("text/xml");
             //获取POST流
             ServletInputStream in = request.getInputStream();
-            if (Configuration.isDebug()) {
-                System.out.println("接收到微信输入流,准备处理...");
+            if (log.isDebugEnabled()) {
+                log.debug("接收到微信输入流,准备处理...");
             }
             IMessageHandler messageHandler = HandlerFactory.getMessageHandler();
             //处理输入消息，返回结果

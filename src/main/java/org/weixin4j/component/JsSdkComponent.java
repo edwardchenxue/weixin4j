@@ -20,6 +20,7 @@
 package org.weixin4j.component;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
@@ -37,6 +38,7 @@ import org.weixin4j.util.SignUtil;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class JsSdkComponent extends AbstractComponent {
 
     public JsSdkComponent() {
@@ -73,8 +75,8 @@ public class JsSdkComponent extends AbstractComponent {
         //成功返回如下JSON:
         //{"errcode":0,"errmsg":"ok","ticket":"bxLdikRXVbTPdHSM05e5u5sUoXNKd8-41ZO3MhKoyN5OfkWITDGgnr2fwJ0m9E8NYzWKVZvdVtaUgWvsdshFKA","expires_in":7200}
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("获取jsapi_ticket返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("获取jsapi_ticket返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

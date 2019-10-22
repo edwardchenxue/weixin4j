@@ -23,6 +23,8 @@ import java.io.StringReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
 import org.weixin4j.WeixinException;
@@ -37,6 +39,7 @@ import org.weixin4j.model.redpack.SendRedPackResult;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class RedpackComponent extends AbstractComponent {
 
     public RedpackComponent(Weixin weixin) {
@@ -73,8 +76,8 @@ public class RedpackComponent extends AbstractComponent {
     public SendRedPackResult sendRedPack(SendRedPack sendRedPack, String partnerId, String certPath, String certSecret) throws WeixinException {
         //将统一下单对象转成XML
         String xmlPost = sendRedPack.toXML();
-        if (Configuration.isDebug()) {
-            System.out.println("调试模式_发送现金红包接口 提交XML数据：" + xmlPost);
+        if (log.isDebugEnabled()) {
+            log.debug("调试模式_发送现金红包接口 提交XML数据：" + xmlPost);
         }
         //创建请求对象
         HttpsClient http = new HttpsClient();

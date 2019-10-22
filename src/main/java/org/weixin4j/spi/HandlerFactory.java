@@ -19,6 +19,7 @@
  */
 package org.weixin4j.spi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 
 /**
@@ -27,6 +28,7 @@ import org.weixin4j.Configuration;
  * @author yangqisheng
  * @since 0.0.6
  */
+@Slf4j
 public class HandlerFactory {
 
     private static IMessageHandler messageHandler = null;
@@ -37,19 +39,19 @@ public class HandlerFactory {
             try {
                 //获取
                 defaultHandler = Configuration.getProperty("weixin4j.handler", defaultHandler);
-                if (Configuration.isDebug()) {
-                    System.out.println("微信输入消息处理Hanler:" + defaultHandler);
+                if (log.isDebugEnabled()) {
+                    log.debug("微信输入消息处理Hanler:" + defaultHandler);
                 }
                 // 加载处理器
                 Class<?> clazz = Class.forName(defaultHandler);
                 try {
                     messageHandler = (IMessageHandler) clazz.newInstance();
                 } catch (Exception ex) {
-                    System.out.println("初始化 IMessageHandler 异常：");
+                    log.debug("初始化 IMessageHandler 异常：");
                     ex.printStackTrace();
                 }
             } catch (ClassNotFoundException ex) {
-                System.out.println("找不到: " + defaultHandler + " 类!");
+                log.debug("找不到: " + defaultHandler + " 类!");
                 ex.printStackTrace();
             }
         }
@@ -64,19 +66,19 @@ public class HandlerFactory {
             try {
                 //获取
                 defaultNormalHandler = Configuration.getProperty("weixin4j.message.handler.normal", defaultNormalHandler);
-                if (Configuration.isDebug()) {
-                    System.out.println("微信接受消息处理Hanler:" + defaultNormalHandler);
+                if (log.isDebugEnabled()) {
+                    log.debug("微信接受消息处理Hanler:" + defaultNormalHandler);
                 }
                 // 加载处理器
                 Class<?> clazz = Class.forName(defaultNormalHandler);
                 try {
                     normalMessageHandler = (INormalMessageHandler) clazz.newInstance();
                 } catch (Exception ex) {
-                    System.out.println("初始化 INormalMessageHandler 异常：");
+                    log.debug("初始化 INormalMessageHandler 异常：");
                     ex.printStackTrace();
                 }
             } catch (ClassNotFoundException ex) {
-                System.out.println("找不到: " + defaultNormalHandler + " 类!");
+                log.debug("找不到: " + defaultNormalHandler + " 类!");
                 ex.printStackTrace();
             }
         }
@@ -91,19 +93,19 @@ public class HandlerFactory {
             try {
                 //获取
                 defaultEventHandler = Configuration.getProperty("weixin4j.message.handler.event", defaultEventHandler);
-                if (Configuration.isDebug()) {
-                    System.out.println("微信接受消息处理Hanler:" + defaultEventHandler);
+                if (log.isDebugEnabled()) {
+                    log.debug("微信接受消息处理Hanler:" + defaultEventHandler);
                 }
                 // 加载处理器
                 Class<?> clazz = Class.forName(defaultEventHandler);
                 try {
                     eventMessageHandler = (IEventMessageHandler) clazz.newInstance();
                 } catch (Exception ex) {
-                    System.out.println("初始化 IEventMessageHandler 异常：");
+                    log.debug("初始化 IEventMessageHandler 异常：");
                     ex.printStackTrace();
                 }
             } catch (ClassNotFoundException ex) {
-                System.out.println("找不到: " + defaultEventHandler + " 类!");
+                log.debug("找不到: " + defaultEventHandler + " 类!");
                 ex.printStackTrace();
             }
         }

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.WordUtils;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
@@ -20,6 +22,7 @@ import org.weixin4j.model.message.MediaType;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class MaterialComponent extends AbstractComponent {
 
     public MaterialComponent(Weixin weixin) {
@@ -42,8 +45,8 @@ public class MaterialComponent extends AbstractComponent {
         String jsonStr = http.uploadHttps("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" + weixin.getToken().getAccess_token() + "&type=" + mediaType.toString(), file);
         JSONObject jsonObj = JSONObject.parseObject(jsonStr);
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("新增临时素材返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("新增临时素材返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

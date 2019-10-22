@@ -22,6 +22,8 @@ package org.weixin4j.component;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
@@ -36,6 +38,7 @@ import org.weixin4j.model.base.Token;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class BaseComponent extends AbstractComponent {
 
     public BaseComponent() {
@@ -71,8 +74,8 @@ public class BaseComponent extends AbstractComponent {
         if (jsonObj == null) {
             throw new WeixinException(getCause(-1));
         }
-        if (Configuration.isDebug()) {
-            System.out.println("getAccessToken返回json：" + jsonObj.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("getAccessToken返回json:" + jsonObj.toString());
         }
         Object errcode = jsonObj.get("errcode");
         if (errcode != null) {
@@ -143,8 +146,8 @@ public class BaseComponent extends AbstractComponent {
         //成功返回如下JSON:
         //{"ip_list":["127.0.0.1","127.0.0.1"]}
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("获取getCallbackIp返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("获取getCallbackIp返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

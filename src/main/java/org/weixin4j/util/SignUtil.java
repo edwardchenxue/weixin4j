@@ -22,6 +22,8 @@ package org.weixin4j.util;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.weixin4j.Configuration;
 
@@ -31,6 +33,7 @@ import org.weixin4j.Configuration;
  * @author yangqisheng
  * @since 0.0.1
  */
+@Slf4j
 public class SignUtil {
 
     /**
@@ -106,21 +109,21 @@ public class SignUtil {
         Map<String, String> sortParams = MapUtil.sortAsc(M);
         //1.2 使用URL键值对的格式
         String string1 = MapUtil.mapJoin(sortParams, false);
-        if (Configuration.isDebug()) {
-            System.out.println("#1.生成字符串：");
-            System.out.println(string1);
+        if (log.isDebugEnabled()) {
+            log.debug("#1.生成字符串：");
+            log.debug(string1);
         }
         //拼接签名字符串
         String stringSignTemp = string1 + "&key=" + paternerKey;
-        if (Configuration.isDebug()) {
-            System.out.println("#2.连接商户key：");
-            System.out.println(stringSignTemp);
+        if (log.isDebugEnabled()) {
+            log.debug("#2.连接商户key：");
+            log.debug(stringSignTemp);
         }
         //2.对string1进行MD5签名
         String sign = DigestUtils.md5Hex(stringSignTemp).toUpperCase();
-        if (Configuration.isDebug()) {
-            System.out.println("#3.md5编码并转成大写：");
-            System.out.println("sign=" + sign);
+        if (log.isDebugEnabled()) {
+            log.debug("#3.md5编码并转成大写：");
+            log.debug("sign=" + sign);
         }
         return sign;
     }

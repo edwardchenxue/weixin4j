@@ -23,6 +23,8 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.Weixin;
 import org.weixin4j.WeixinException;
@@ -40,6 +42,7 @@ import org.weixin4j.model.message.MediaType;
  * @since 0.1.0
  */
 @Deprecated
+@Slf4j
 public class MediaComponent extends AbstractComponent {
 
     public MediaComponent(Weixin weixin) {
@@ -65,8 +68,8 @@ public class MediaComponent extends AbstractComponent {
         String jsonStr = http.uploadHttps("https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" + weixin.getToken().getAccess_token(), file);
         JSONObject jsonObj = JSONObject.parseObject(jsonStr);
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("上传图文消息内的图片返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("上传图文消息内的图片返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -96,8 +99,8 @@ public class MediaComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("uploadnews返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("uploadnews返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -126,8 +129,8 @@ public class MediaComponent extends AbstractComponent {
         String jsonStr = http.uploadHttps("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" + weixin.getToken().getAccess_token() + "&type=" + mediaType.toString(), file);
         JSONObject jsonObj = JSONObject.parseObject(jsonStr);
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("上传多媒体文件返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("上传多媒体文件返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

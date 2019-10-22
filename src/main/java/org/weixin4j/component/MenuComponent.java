@@ -20,6 +20,7 @@
 package org.weixin4j.component;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.Configuration;
 import org.weixin4j.model.menu.Menu;
 import org.weixin4j.Weixin;
@@ -33,6 +34,7 @@ import org.weixin4j.http.Response;
  * @author yangqisheng
  * @since 0.1.0
  */
+@Slf4j
 public class MenuComponent extends AbstractComponent {
 
     public MenuComponent(Weixin weixin) {
@@ -57,8 +59,8 @@ public class MenuComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/menu/create返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/menu/create返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {
@@ -82,8 +84,8 @@ public class MenuComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/menu/get返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/menu/get返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null) {
@@ -110,8 +112,8 @@ public class MenuComponent extends AbstractComponent {
         //根据请求结果判定，是否验证成功
         JSONObject jsonObj = res.asJSONObject();
         if (jsonObj != null) {
-            if (Configuration.isDebug()) {
-                System.out.println("/menu/delete返回json：" + jsonObj.toString());
+            if (log.isDebugEnabled()) {
+                log.debug("/menu/delete返回json:" + jsonObj.toString());
             }
             Object errcode = jsonObj.get("errcode");
             if (errcode != null && !errcode.toString().equals("0")) {

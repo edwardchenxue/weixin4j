@@ -20,6 +20,7 @@
 package org.weixin4j.http;
 
 import com.alibaba.fastjson.JSONException;
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.model.media.Attachment;
 import com.alibaba.fastjson.JSONObject;
 import java.io.BufferedInputStream;
@@ -60,6 +61,7 @@ import javax.net.ssl.TrustManager;
  * @author yangqisheng
  * @since 0.0.1
  */
+@Slf4j
 public class HttpsClient implements java.io.Serializable {
 
     private static final int OK = 200;  // OK: Success!
@@ -85,8 +87,8 @@ public class HttpsClient implements java.io.Serializable {
     public Response post(String url, JSONObject json) throws WeixinException {
         //将JSON数据转换为String字符串
         String jsonString = json == null ? null : json.toString();
-        if (Configuration.isDebug()) {
-            System.out.println("URL POST 数据：" + jsonString);
+        if (log.isDebugEnabled()) {
+            log.debug("URL POST 数据：" + jsonString);
         }
         //提交数据
         return httpRequest(url, POST, jsonString, false, null, null, null);
