@@ -19,6 +19,8 @@
  */
 package org.weixin4j.model.js;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,7 +30,7 @@ import java.util.Date;
  * @author yangqisheng
  * @since 0.1.0
  */
-public final class Ticket implements Serializable {
+public class Ticket implements Serializable {
 
     /**
      * 凭证字符串
@@ -54,6 +56,10 @@ public final class Ticket implements Serializable {
      * 创建时间
      */
     private long create_time;
+
+    public Ticket() {
+    }
+
 
     public Ticket(TicketType ticketType, String ticket, int expires_in) {
         this(ticketType, ticket, expires_in, System.currentTimeMillis());
@@ -90,6 +96,7 @@ public final class Ticket implements Serializable {
      *
      * @return 过期返回 true,否则返回false
      */
+    @JsonIgnore
     public boolean isExprexpired() {
         Date now = new Date();
         long nowLong = now.getTime();

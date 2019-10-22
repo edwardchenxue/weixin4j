@@ -338,7 +338,7 @@ public class SnsComponent extends AbstractComponent {
                 throw new WeixinException(getCause(jsonObj.getIntValue("errcode")));
             }
             //设置公众号信息
-            user = (SnsUser) JSONObject.toJavaObject(jsonObj, SnsUser.class);
+            user = JSONObject.toJavaObject(jsonObj, SnsUser.class);
         }
         return user;
     }
