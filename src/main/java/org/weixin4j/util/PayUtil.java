@@ -24,6 +24,8 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
+import lombok.extern.slf4j.Slf4j;
 import org.weixin4j.model.pay.PayNotifyResult;
 import org.weixin4j.model.pay.WCPay;
 import org.weixin4j.model.pay.WXPackage;
@@ -35,6 +37,7 @@ import org.weixin4j.model.pay.WXPay;
  * @author yangqisheng
  * @since 0.0.4
  */
+@Slf4j
 public class PayUtil {
 
     /**
@@ -81,6 +84,23 @@ public class PayUtil {
     }
 
     /**
+     * 获取支付结果通知对象
+     *
+     * @param xmlMsg xml参数字符串
+     * @return
+     */
+    public static PayNotifyResult getPayNotifyResult(String xmlMsg) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(PayNotifyResult.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            return (PayNotifyResult) unmarshaller.unmarshal(new StringReader(xmlMsg));
+        } catch (JAXBException ex) {
+            log.error("", ex);
+            return null;
+        }
+    }
+
+    /**
      * 验证签名
      *
      * @param xmlMsg xml参数字符串
@@ -92,20 +112,31 @@ public class PayUtil {
             JAXBContext context = JAXBContext.newInstance(PayNotifyResult.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             PayNotifyResult result = (PayNotifyResult) unmarshaller.unmarshal(new StringReader(xmlMsg));
-            //转换为Map
-            Map<String, String> M = result.toMap();
-            if (M.containsKey("sign")) {
-                M.remove("sign");
-            }
-            //签名
-            String sign = SignUtil.getSign(M, paternerKey);
-            if (sign == null || sign.equals("")) {
-                return false;
-            }
-            //判断是否一致
-            return sign.equals(result.getSign());
+            return verifySign(result, paternerKey);
         } catch (JAXBException ex) {
             return false;
         }
+    }
+
+    /**
+     * 验证签名
+     *
+     * @param payNotifyResult payNotifyResult
+     * @param paternerKey 商户密钥
+     * @return 签名验证，成功返回true,否则返回false
+     */
+    public static boolean verifySign(PayNotifyResult payNotifyResult, String paternerKey) {
+        Map<String, String> M = payNotifyResult.toMap();
+        if (M.containsKey("sign")) {
+            M.remove("sign");
+        }
+        //签名
+        String sign = SignUtil.getSign(M, paternerKey);
+        if (sign == null || sign.equals("")) {
+            return false;
+        }
+        //判断是否一致
+        return sign.equals(payNotifyResult.getSign());
+
     }
 }
